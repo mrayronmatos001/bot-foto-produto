@@ -41,11 +41,20 @@ client.on('message', async msg => {
     const legenda = msg.body?.trim() || '';
 
     console.log('📤 Enviando para o webhook...');
-    const response = await axios.post('https://seu-webhook.com/webhook/produto-foto', {
-      imagem: media.data,
-      mime: media.mimetype,
-      estabelecimento: legenda || "Não informado"
-    });
+    const response = await axios.post(
+        'https://automations.comparo.markets/webhook/produto-foto',
+        {
+            imagem: media.data,
+            mime: media.mimetype,
+            estabelecimento: legenda || "Não informado"
+        },
+        {
+            headers: {
+            Authorization: 'e4a91f58c27d443d9b32f6a21856b7ee',
+            'Content-Type': 'application/json'
+            }
+        }
+    );
 
     console.log('📬 Resposta do webhook:', response.data);
 
