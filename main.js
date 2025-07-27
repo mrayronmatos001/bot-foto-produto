@@ -31,9 +31,16 @@ client.on('message', async msg => {
   try {
     const media = await msg.downloadMedia();
 
-    if (!media) {
-      console.log('❌ Não foi possível baixar a mídia.');
-      return client.sendMessage(msg.from, '❌ Não foi possível baixar a imagem.');
+    console.log('📨 Nova mensagem de:', msg.from);
+
+    if (msg.from.endsWith('@g.us')) {
+        console.log('🚫 Mensagem ignorada (grupo):', msg.from);
+        return;
+    }
+
+    if (!msg.hasMedia) {
+        console.log('⚠️ Mensagem recebida sem mídia.');
+        return client.sendMessage(msg.from, '📷 Envie uma *imagem do produto* para análise.');
     }
 
     console.log('📥 Mídia recebida. MIME:', media.mimetype);
