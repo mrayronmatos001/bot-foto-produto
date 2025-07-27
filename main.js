@@ -42,7 +42,7 @@ client.on('message', async msg => {
 
     console.log('📤 Enviando para o webhook...');
     const response = await axios.post(
-        'https://automations.comparo.markets/webhook/produto-foto',
+        'https://automations.comparo.markets/webhook/foto-preco',
         {
             imagem: media.data,
             mime: media.mimetype,
