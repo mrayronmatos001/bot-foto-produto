@@ -21,7 +21,10 @@ client.on('ready', () => {
 });
 
 client.on('message', async msg => {
+  console.log('📨 Nova mensagem de:', msg.from);
+
   if (!msg.hasMedia) {
+    console.log('⚠️ Mensagem recebida sem mídia.');
     return client.sendMessage(msg.from, '📷 Envie uma *imagem do produto* para análise.');
   }
 
@@ -29,17 +32,22 @@ client.on('message', async msg => {
     const media = await msg.downloadMedia();
 
     if (!media) {
+      console.log('❌ Não foi possível baixar a mídia.');
       return client.sendMessage(msg.from, '❌ Não foi possível baixar a imagem.');
     }
 
+    console.log('📥 Mídia recebida. MIME:', media.mimetype);
+
     const legenda = msg.body?.trim() || '';
 
-    // Enviar para o webhook do n8n
+    console.log('📤 Enviando para o webhook...');
     const response = await axios.post('https://seu-webhook.com/webhook/produto-foto', {
       imagem: media.data,
       mime: media.mimetype,
       estabelecimento: legenda || "Não informado"
     });
+
+    console.log('📬 Resposta do webhook:', response.data);
 
     const dados = response.data;
 
@@ -52,7 +60,7 @@ client.on('message', async msg => {
     }
 
   } catch (error) {
-    console.error('Erro ao enviar para o webhook:', error.message);
+    console.error('🔥 Erro ao enviar para o webhook:', error.message);
     await client.sendMessage(msg.from, '❌ Ocorreu um erro ao processar a imagem.');
   }
 });
