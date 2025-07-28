@@ -49,6 +49,7 @@ client.on('message', async msg => {
     // Validação da estrutura esperada
     if (
       typeof dados.nome !== 'string' ||
+      typeof dados.marca !== 'string' ||
       typeof dados.gramatura !== 'string' ||
       typeof dados.data !== 'string' ||
       typeof dados.estabelecimento !== 'string' ||
@@ -85,7 +86,8 @@ client.on('message', async msg => {
       '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar neste formato (copie e cole como texto simples):\n\n' +
       '```\n' +
       JSON.stringify({
-        nome: "Maionese Hellmann's",
+        nome: "Maionese",
+        marca: "Hellmann's",
         preco: {
           normal: 1590,
           atacado: 1590,
