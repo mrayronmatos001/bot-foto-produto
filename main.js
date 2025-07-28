@@ -22,16 +22,31 @@ client.on('ready', () => {
 client.on('message', async msg => {
   console.log('📨 Mensagem recebida de:', msg.from);
 
-  // Ignora grupos
+  // Ignora mensagens de grupo
   if (msg.from.endsWith('@g.us')) {
     console.log('🚫 Ignorado (grupo):', msg.from);
     return;
   }
 
   try {
-    const dados = JSON.parse(msg.body);
+    // 🔍 Log da mensagem original
+    console.log('📝 Texto original recebido:\n', msg.body);
 
-    // Verifica se o JSON contém a estrutura correta
+    // 🧼 Corrige aspas tipográficas
+    const jsonStr = msg.body
+      .replace(/[“”]/g, '"') // aspas duplas curvas → normais
+      .replace(/[‘’]/g, "'"); // apóstrofos → normais
+
+    // 🔍 Log do texto após sanitização
+    console.log('🧪 Texto após sanitização:\n', jsonStr);
+
+    // 🔁 Parse para JSON
+    const dados = JSON.parse(jsonStr);
+
+    // ✅ Log do objeto convertido
+    console.log('✅ JSON parseado com sucesso:', dados);
+
+    // Validação da estrutura
     if (
       typeof dados.nome !== 'string' ||
       typeof dados.gramatura !== 'string' ||
@@ -42,29 +57,31 @@ client.on('message', async msg => {
       typeof dados.preco.atacado !== 'number' ||
       typeof dados.preco.afiliado !== 'number'
     ) {
-      return client.sendMessage(msg.from, '⚠️ JSON inválido. Verifique a estrutura e os tipos dos campos.');
+      return client.sendMessage(msg.from, '⚠️ JSON inválido. Verifique os campos obrigatórios e seus tipos.');
     }
 
-    console.log('📦 JSON válido recebido:', dados);
-
-    // Envia para o workflow no n8n
+    // Envia para o webhook no n8n
     await axios.post('https://automations.comparo.markets/webhook/produto-identificado', dados, {
       headers: {
-        Authorization: 'e4a91f58c27d443d9b32f6a21856b7ee', // substitua pelo seu token real
+        Authorization: 'e4a91f58c27d443d9b32f6a21856b7ee',
         'Content-Type': 'application/json'
       }
     });
 
     const precoFormatado = (dados.preco.normal / 100).toFixed(2).replace('.', ',');
 
-    const resposta = `✅ Produto registrado com sucesso:\n📦 *${dados.nome}*\n💲 R$ ${precoFormatado}\n🏪 ${dados.estabelecimento}`;
-    await client.sendMessage(msg.from, resposta);
+    await client.sendMessage(msg.from,
+      `✅ Produto registrado com sucesso:\n` +
+      `📦 *${dados.nome}*\n` +
+      `💲 R$ ${precoFormatado}\n` +
+      `🏪 ${dados.estabelecimento}`
+    );
 
   } catch (error) {
-    console.error('❌ Erro ao processar JSON:', error.message);
+    console.error('❌ Erro ao processar mensagem:', error.message);
     await client.sendMessage(
       msg.from,
-      '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar com este formato:\n\n' +
+      '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar neste formato:\n\n' +
       '```\n' +
       JSON.stringify({
         nome: "Maionese Hellmann's",
