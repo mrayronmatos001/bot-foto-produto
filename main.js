@@ -32,6 +32,9 @@ client.on('message', async msg => {
       console.log('🚫 Ignorado (grupo):', msg.from);
       return;
     }
+  } catch (err) {
+  console.error('Erro:', err);
+  }
 
   try {
     // 🔍 Mostra o texto original da mensagem
