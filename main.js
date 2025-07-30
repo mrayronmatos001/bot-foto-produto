@@ -20,13 +20,18 @@ client.on('ready', () => {
 });
 
 client.on('message', async msg => {
-  console.log('📨 Mensagem recebida de:', msg.from);
+  try {
+    if (!msg || !msg.from) {
+      console.log('⚠️ Mensagem inválida recebida:', msg);
+      return;
+    }
 
-  // Ignora mensagens de grupo
-  if (msg.from.endsWith('@g.us')) {
-    console.log('🚫 Ignorado (grupo):', msg.from);
-    return;
-  }
+    console.log('📨 Mensagem recebida de:', msg.from);
+
+    if (msg.from.endsWith('@g.us')) {
+      console.log('🚫 Ignorado (grupo):', msg.from);
+      return;
+    }
 
   try {
     // 🔍 Mostra o texto original da mensagem
@@ -48,7 +53,7 @@ client.on('message', async msg => {
 
     // Validação da estrutura esperada
     if (
-      typeof dados.nome !== 'string' ||
+      typeof dados.tipo !== 'string' ||
       typeof dados.marca !== 'string' ||
       typeof dados.gramatura !== 'string' ||
       typeof dados.data !== 'string' ||
@@ -73,7 +78,7 @@ client.on('message', async msg => {
 
     await client.sendMessage(msg.from,
       `✅ Produto registrado com sucesso:\n` +
-      `📦 *${dados.nome}*\n` +
+      `📦 *${dados.tipo}*\n` +
       `💲 R$ ${precoFormatado}\n` +
       `🏪 ${dados.estabelecimento}`
     );
@@ -86,7 +91,7 @@ client.on('message', async msg => {
       '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar neste formato (copie e cole como texto simples):\n\n' +
       '```\n' +
       JSON.stringify({
-        nome: "Maionese",
+        tipo: "Maionese",
         marca: "Hellmann's",
         preco: {
           normal: 1590,
