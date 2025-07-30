@@ -58,6 +58,7 @@ client.on('message', async msg => {
     if (
       typeof dados.tipo !== 'string' ||
       typeof dados.marca !== 'string' ||
+      typeof dados.sabor !== 'string' ||
       typeof dados.gramatura !== 'string' ||
       typeof dados.data !== 'string' ||
       typeof dados.estabelecimento !== 'string' ||
@@ -94,15 +95,16 @@ client.on('message', async msg => {
       '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar neste formato (copie e cole como texto simples):\n\n' +
       '```\n' +
       JSON.stringify({
-        tipo: "Maionese",
-        marca: "Hellmann's",
+        tipo: "Biscoito Recheado",
+        marca: "Bono",
+        sabor: "Doce de Leite",
         preco: {
-          normal: 1590,
-          atacado: 1590,
-          afiliado: 1590
+          normal: 199,
+          atacado: 199,
+          afiliado: 199
         },
-        gramatura: "1kg",
-        data: "2025-07-27",
+        gramatura: "140g",
+        data: "2025-07-30",
         estabelecimento: "Supershow"
       }, null, 2) +
       '\n```'
