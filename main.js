@@ -56,8 +56,9 @@ client.on('message', async msg => {
 
     // Validação da estrutura esperada
     if (
-      typeof dados.tipo !== 'string' ||
+      typeof dados.produto !== 'string' ||
       typeof dados.marca !== 'string' ||
+      typeof dados.tipo !== 'string' ||
       typeof dados.sabor !== 'string' ||
       typeof dados.gramatura !== 'string' ||
       typeof dados.data !== 'string' ||
@@ -95,8 +96,9 @@ client.on('message', async msg => {
       '❌ Ocorreu um erro ao processar o JSON. Certifique-se de enviar neste formato (copie e cole como texto simples):\n\n' +
       '```\n' +
       JSON.stringify({
-        tipo: "Biscoito Recheado",
+        produto: "Biscoito",
         marca: "Bono",
+        tipo: "Recheado",
         sabor: "Doce de Leite",
         preco: {
           normal: 199,
